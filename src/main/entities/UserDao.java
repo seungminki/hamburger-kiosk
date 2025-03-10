@@ -7,24 +7,24 @@ import java.util.Map;
 public class UserDao {
     private Map<String, User> users = DatabaseClass.getUser();
 
-    public void addUser(String userid, int assets) {
-        users.put(userid, new User(userid, assets));
+    public void addUser(String userId, int assets) {
+        users.put(userId, new User(userId, assets));
     }
 
     public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
 
-    public User getUser(String userid) {
-        return users.get(userid);
+    public User getUser(String userId) {
+        return users.get(userId);
     }
 
-    public int updateUserAssets(String userid, int totalPrice) {
-        User user = getUser(userid);
+    public int updateUserAssets(String userId, int totalPrice) {
+        User user = getUser(userId);
         int currentAssets = user.getAssets() - totalPrice;
 
         User updatedUser = new User(user.getId(), currentAssets);
-        users.put(userid, updatedUser);
+        users.put(userId, updatedUser);
 
         return currentAssets;
 

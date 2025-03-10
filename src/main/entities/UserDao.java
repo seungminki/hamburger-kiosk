@@ -18,4 +18,15 @@ public class UserDao {
     public User getUser(String userid) {
         return users.get(userid);
     }
+
+    public int updateUserAssets(String userid, int totalPrice) {
+        User user = getUser(userid);
+        int currentAssets = user.getAssets() - totalPrice;
+
+        User updatedUser = new User(user.getId(), currentAssets);
+        users.put(userid, updatedUser);
+
+        return currentAssets;
+
+    }
 }

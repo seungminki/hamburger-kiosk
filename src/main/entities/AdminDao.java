@@ -18,5 +18,16 @@ public class AdminDao {
     public Admin getAdmin(String adminName) {
         return admins.get(adminName);
     }
+
+    public int updateAdminAssets(String adminName, int totalPrice) {
+        Admin admin = getAdmin(adminName);
+        int currentAssets = admin.getAssets() + totalPrice;
+
+        Admin updatedAdmin = new Admin(admin.getName(), currentAssets);
+        admins.put(adminName, updatedAdmin);
+
+        return currentAssets;
+
+    }
 }
 

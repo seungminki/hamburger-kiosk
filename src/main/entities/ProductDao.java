@@ -32,7 +32,7 @@ public class ProductDao {
     }
 
 
-    public void updateProduct(String productName, int productCount) {
+    public void updateProductQuantity(String productName, int productCount) {
         Product product = getProduct(productName);
 
         int currentQuantity = Integer.parseInt(product.getQuantity());

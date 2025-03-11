@@ -1,15 +1,19 @@
 package main.screens;
 
 import main.Input;
+import main.OrderProduct;
 import main.entities.*;
 
 import java.io.IOException;
 
 public class ProductScreen {
     Input input = new Input();
+
     ProductDao product = new ProductDao();
     AdminDao admin = new AdminDao();
     UserDao user = new UserDao();
+
+    OrderProduct order = new OrderProduct();
 
     public void welcomeScreen() throws IOException {
 
@@ -22,8 +26,8 @@ public class ProductScreen {
             showAccount(userId, adminName);
 
             showAllProduct();
-
             buyProduct();
+
             if (!ynRebuyProduct()) {
                 break;
             }
@@ -33,7 +37,6 @@ public class ProductScreen {
     }
 
     private void showAccount(String userId, String adminName) {
-
         System.out.println("안녕하세요. " + userId + "님 햄버거 가게 입니다.");
         System.out.println("현재 접속된 관리자는 " + adminName + "입니다.");
         System.out.println("\n");
@@ -55,112 +58,24 @@ public class ProductScreen {
         System.out.println("\n");
     }
 
-    private boolean validateProductName(Product p) {
-        if (p == null) {
-            System.out.println("해당 상품이 없습니다.");
-            return false;
-        }
-        return true;
-    }
+    private String[] inputBuyProduct() {
+        System.out.println("구매하실 상품명과 수량을 입력해 주세요. (예: [치킨버거-3],[불고기버거세트-2])");
+        String productList = input.getInput();
 
-    private boolean validateProductQuantity(Product p, int buyQuantity) {
-        try {
-            int currentQuantity = Integer.parseInt(p.getQuantity());
-
-            if (currentQuantity > buyQuantity) {
-                return true;
-            } else {
-                System.out.println("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다.");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("[ERROR] 품절된 상품은 구매할 수 없습니다.");
-            return false;
-        }
-    }
-
-    private boolean validateProductAssets(int userAssets, int totalPrice) {
-        // TODO: 회원의 보유 금액과 총 물품 가격을 비교하여 에러 발생
-        if (userAssets > totalPrice) {
-            return true;
-        }
-        return false;
-
+        return input.splitProductInput(productList);
     }
 
     private void buyProduct() {
-        while (true) {
-            System.out.println("구매하실 상품명과 수량을 입력해 주세요. (예: [치킨버거-3],[불고기버거세트-2])");
-            String productList = input.getInput();
-            String[] items = input.splitProductInput(productList);
+        try {
+            String[] items = inputBuyProduct();
 
             for (String item : items) {
-                String[] parts = item.split("-");
-                String name = parts[0]; // 상품명
-                int count = Integer.parseInt(parts[1]); // 개수
-
-
-                Product p = product.getProduct(name); // -한우버거, 10000원, 3개, 롯데리아 한우버거
-
-                if (!validateProductName(p)) {
-                    break;
-                }
-
-                if (isSide(p) || isDrink(p)) {
-                    if (validateProductQuantity(p, count)) {
-                        product.updateProductQuantity(name, count);
-                    }
-                }
-
-                if (isBurger(p)) {
-                    // System.out.println("너 지금 버거 시킴");
-
-                    if (validateProductQuantity(p, count)) {
-                        product.updateProductQuantity(name, count);
-                        product.updateProductQuantity(name + "세트", count);
-                    }
-                }
-
-                if (isBurgerSet(p)) {
-                    // System.out.println("너 지금 세트 시킴");
-
-                    if (validateProductQuantity(p, count)) {
-                        if (validateProductQuantity(p, count)) {
-                            if (validateProductQuantity(p, count)) {
-                                product.updateProductQuantity(name, count);
-
-                                String updatedName = name.replace("세트", "");
-
-                                System.out.println(name + " -> " + updatedName); // 치킨버거세트 -> 치킨버거
-                                product.updateProductQuantity("감자튀김", count);
-                                product.updateProductQuantity("콜라", count);
-                            }
-                        }
-                    }
-
-                }
+                order.processOrderItems(item);
             }
             resultReceipt(items);
-            // TODO: 수량 및 에러 발생 시 영수증 표시 X
-            break;
+        } catch (Exception e) {
+            System.out.println("[ERROR] 주문 처리 중 오류가 발생했습니다.\n");
         }
-    }
-
-    private boolean isBurger(Product p) {
-        return p.getCategory().equals("햄버거");
-
-    }
-
-    private boolean isBurgerSet(Product p) {
-        return p.getCategory().equals("세트");
-    }
-
-    private boolean isSide(Product p) {
-        return p.getCategory().equals("사이드");
-    }
-
-    private boolean isDrink(Product p) {
-        return p.getCategory().equals("음료수");
     }
 
     private void resultReceipt(String[] items) {
@@ -169,7 +84,6 @@ public class ProductScreen {
 
         System.out.println("=====================");
         System.out.println("상품명 수량 금액");
-
 
         for (String item : items) {
             String[] parts = item.split("-");
@@ -220,6 +134,8 @@ public class ProductScreen {
         if (yn.equals("N") || yn.equals("n")) {
             return false;
         }
+
+        // TODO: y,n 말고 다른 문자 입력시 에러 처리
 
         return false;
 

@@ -30,20 +30,15 @@ public class OrderProduct {
         }
 
         if (isBurgerSet(p) && validateProductQuantity(name, count) && validateSetComponentsQuantity(count)) {
+            // TODO: 콜라, 제로콜라 중 선택 기능 추가
             product.updateProductQuantity(name, count);
 
             String updatedName = name.replace("세트", "");
+            product.updateProductQuantity(updatedName, count);
             product.updateProductQuantity("감자튀김", count);
             product.updateProductQuantity("콜라", count);
 
         }
-    }
-
-    private String[] inputBuyProduct() {
-        System.out.println("구매하실 상품명과 수량을 입력해 주세요. (예: [치킨버거-3],[불고기버거세트-2])");
-        String productList = input.getInput();
-
-        return input.splitProductInput(productList);
     }
 
     private boolean validateSetComponentsQuantity(int count) {

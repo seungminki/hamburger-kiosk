@@ -58,7 +58,7 @@ public class RootScreen {
                 us.showLoginScreen();
                 if (us.isLoggedIn()) {
                     if (!as.isLoggedIn()) {
-                        System.out.println("관리자 접속 후 이용해주세요.");
+                        System.out.println("[ERROR] 관리자 접속 후 이용해주세요.");
                     } else {
                         ps.welcomeScreen();
                     }
@@ -68,7 +68,7 @@ public class RootScreen {
             if (inputValue != exitNum && inputValue != createAdminNum &&
                     inputValue != loginAdminNum && inputValue != createUserNum &&
                     inputValue != loginUserNum) {
-                System.out.println("유효한 메뉴 번호를 입력하세요.");
+                System.out.println("[ERROR] 유효한 메뉴 번호를 입력하세요.");
             }
 
         }

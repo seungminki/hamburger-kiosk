@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class KioskMain {
     public static void main(String[] args) throws IOException {
+        // TODO: Complexity 해결
         RootScreen rs = new RootScreen();
         AdminScreen as = new AdminScreen();
         UserScreen us = new UserScreen();

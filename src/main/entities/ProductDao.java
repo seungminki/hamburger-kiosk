@@ -60,9 +60,11 @@ public class ProductDao {
             }
         }
 
+        System.out.println("=" + category);
         for (Product p : productList) {
             System.out.println(p);
         }
+        System.out.println("\n");
 
         return productList;
 

@@ -43,18 +43,12 @@ public class ProductScreen {
     }
 
     private void showAllProduct() {
-        System.out.println("=햄버거\n");
-        product.getProductByCategory("햄버거");
+        product.getProductByCategory(ProductCategory.HAMBURGER.getCategory());
+        product.getProductByCategory(ProductCategory.H_SET.getCategory());
+        product.getProductByCategory(ProductCategory.SIDE.getCategory());
+        product.getProductByCategory(ProductCategory.DRINK.getCategory());
 
-        System.out.println("=세트\n");
-        product.getProductByCategory("세트");
-
-        System.out.println("=사이드\n");
-        product.getProductByCategory("사이드");
-
-        System.out.println("=음료수\n");
-        product.getProductByCategory("음료수");
-
+        System.out.println("=================================");
         System.out.println("\n");
     }
 

@@ -1,8 +1,8 @@
 package main.entities;
 
 public class Admin {
-    private String name;
-    private int assets;
+    private final String name;
+    private final int assets;
 
     public Admin(String name, int assets) {
         this.name = name;

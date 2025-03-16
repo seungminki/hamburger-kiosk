@@ -1,11 +1,11 @@
 package main.entities;
 
 public class Product {
-    private String name;
-    private int price;
-    private String quantity;
-    private String description;
-    private String category;
+    private final String name;
+    private final int price;
+    private final String quantity;
+    private final String description;
+    private final String category;
 
     public Product(String name, int price, String quantity, String description, String category) {
         this.name = name;

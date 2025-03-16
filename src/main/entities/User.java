@@ -1,8 +1,8 @@
 package main.entities;
 
 public class User {
-    private String id;
-    private int assets;
+    private final String id;
+    private final int assets;
 
     public User(String id, int assets) {
         this.id = id;

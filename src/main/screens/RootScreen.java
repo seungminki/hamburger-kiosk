@@ -1,11 +1,21 @@
 package main.screens;
 
 import main.Input;
+import main.enums.ErrorMessage;
 
 import java.io.IOException;
 
 public class RootScreen {
     Input input = new Input();
+
+    AdminScreen as = new AdminScreen();
+    UserScreen us = new UserScreen();
+    ProductScreen ps = new ProductScreen();
+
+    int createAdminNum = 1;
+    int loginAdminNum = 2;
+    int createUserNum = 3;
+    int loginUserNum = 4;
 
     public int welcomeScreen() {
         System.out.println("\n");
@@ -19,59 +29,41 @@ public class RootScreen {
         return input.getMenuInput();
     }
 
-    public void moveScreen() throws IOException {
-        // TODO: Complexity 해결
-        RootScreen rs = new RootScreen();
-        AdminScreen as = new AdminScreen();
-        UserScreen us = new UserScreen();
-        ProductScreen ps = new ProductScreen();
+    public void moveScreen(int inputValue) throws IOException {
 
-        boolean status = true;
-
-        int exitNum = 0;
-        int createAdminNum = 1;
-        int loginAdminNum = 2;
-        int createUserNum = 3;
-        int loginUserNum = 4;
-
-
-        while (status) {
-            int inputValue = rs.welcomeScreen();
-
-            if (inputValue == exitNum) {
-                status = false;
-            }
-
-            if (inputValue == createAdminNum) {
-                as.showCreateScreen();
-            }
-
-            if (inputValue == loginAdminNum) {
-                as.showLoginScreen();
-            }
-
-            if (inputValue == createUserNum) {
-                us.showCreateScreen();
-            }
-
-            if (inputValue == loginUserNum) {
-                us.showLoginScreen();
-                if (us.isLoggedIn()) {
-                    if (!as.isLoggedIn()) {
-                        System.out.println("[ERROR] 관리자 접속 후 이용해주세요.");
-                    } else {
-                        ps.welcomeScreen();
-                    }
-                }
-            }
-
-            if (inputValue != exitNum && inputValue != createAdminNum &&
-                    inputValue != loginAdminNum && inputValue != createUserNum &&
-                    inputValue != loginUserNum) {
-                System.out.println("[ERROR] 유효한 메뉴 번호를 입력하세요.");
-            }
-
+        if (inputValue == createAdminNum) {
+            as.showCreateScreen();
+            return;
         }
 
+        if (inputValue == loginAdminNum) {
+            as.showLoginScreen();
+            return;
+        }
+
+        if (inputValue == createUserNum) {
+            us.showCreateScreen();
+            return;
+        }
+
+        if (inputValue == loginUserNum) {
+            us.showLoginScreen();
+            validateLogin();
+            ps.welcomeScreen();
+            return;
+        }
+
+        throw new IllegalArgumentException(ErrorMessage.INVALID_ROOT_MENU_NUM.getMessage());
     }
+
+    private void validateLogin() {
+        if (!us.isLoggedIn()) {
+            throw new IllegalArgumentException(ErrorMessage.UNLOGGED_STATUS_USER.getMessage());
+        }
+        if (!as.isLoggedIn()) {
+            throw new IllegalArgumentException(ErrorMessage.UNLOGGED_STATUS_ADMIN.getMessage());
+        }
+    }
+
 }
+

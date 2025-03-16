@@ -12,10 +12,10 @@ public class RootScreen {
     UserScreen us = new UserScreen();
     ProductScreen ps = new ProductScreen();
 
-    int createAdminNum = 1;
-    int loginAdminNum = 2;
-    int createUserNum = 3;
-    int loginUserNum = 4;
+    private static final int CREATE_ADMIN = 1;
+    private static final int LOGIN_ADMIN = 2;
+    private static final int CREATE_USER = 3;
+    private static final int LOGIN_USER = 4;
 
     public int welcomeScreen() {
         System.out.println("\n");
@@ -31,22 +31,22 @@ public class RootScreen {
 
     public void moveScreen(int inputValue) throws IOException {
 
-        if (inputValue == createAdminNum) {
+        if (inputValue == CREATE_ADMIN) {
             as.showCreateScreen();
             return;
         }
 
-        if (inputValue == loginAdminNum) {
+        if (inputValue == LOGIN_ADMIN) {
             as.showLoginScreen();
             return;
         }
 
-        if (inputValue == createUserNum) {
+        if (inputValue == CREATE_USER) {
             us.showCreateScreen();
             return;
         }
 
-        if (inputValue == loginUserNum) {
+        if (inputValue == LOGIN_USER) {
             us.showLoginScreen();
             validateLogin();
             ps.welcomeScreen();

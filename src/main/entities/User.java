@@ -16,10 +16,5 @@ public class User {
     public int getAssets() {
         return assets;
     }
-
-    @Override
-    public String toString() {
-        return "User{name='" + id + "', assets=" + assets + "}";
-    }
 }
 

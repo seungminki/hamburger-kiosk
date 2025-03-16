@@ -16,9 +16,4 @@ public class Admin {
     public int getAssets() {
         return assets;
     }
-
-    @Override
-    public String toString() {
-        return "Admin{name='" + name + "', assets=" + assets + "}";
-    }
 }

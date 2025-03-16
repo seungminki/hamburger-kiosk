@@ -35,9 +35,8 @@ public class Product {
         return category;
     }
 
-    @Override
-    public String toString() {
-        return "-%s, %d원, %s개, %s".formatted(name, price, quantity, description);
+    public String getProductInfo() {
+        return String.format("-%s, %d원, %s개, %s", name, price, quantity, description);
     }
 
 

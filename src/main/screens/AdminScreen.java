@@ -10,8 +10,8 @@ public class AdminScreen implements AccountScreen {
 
     private static String loggedInAdmin;
 
-    int nameNumber = 0;
-    int assetsNumber = 1;
+    private static final int PARTS_NAME = 0;
+    private static final int PARTS_ASSETS = 1;
 
     @Override
     public void showCreateScreen() {
@@ -29,11 +29,11 @@ public class AdminScreen implements AccountScreen {
     public void create(String adminInfo) {
         String[] parts = input.splitAccountInput(adminInfo);
 
-        if (validate(parts[nameNumber])) {
+        if (validate(parts[PARTS_NAME])) {
             throw new IllegalArgumentException(ErrorMessage.ALREADY_ADMIN.getMessage());
         }
 
-        admin.addAdmin(parts[nameNumber], Integer.parseInt(parts[assetsNumber]));
+        admin.addAdmin(parts[PARTS_NAME], Integer.parseInt(parts[PARTS_ASSETS]));
     }
 
     @Override

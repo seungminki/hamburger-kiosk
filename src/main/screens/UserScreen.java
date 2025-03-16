@@ -10,8 +10,8 @@ public class UserScreen implements AccountScreen {
 
     private static String loggedInUser;
 
-    int idNumber = 0;
-    int assetsNumber = 1;
+    private static final int PARTS_ID = 0;
+    private static final int PARTS_ASSETS = 1;
 
     @Override
     public void showCreateScreen() {
@@ -29,10 +29,10 @@ public class UserScreen implements AccountScreen {
     public void create(String userInfo) {
         String[] parts = input.splitAccountInput(userInfo);
 
-        if (validate(parts[idNumber])) {
+        if (validate(parts[PARTS_ID])) {
             throw new IllegalArgumentException(ErrorMessage.ALREADY_USER.getMessage());
         }
-        user.addUser(parts[idNumber], Integer.parseInt(parts[assetsNumber]));
+        user.addUser(parts[PARTS_ID], Integer.parseInt(parts[PARTS_ASSETS]));
     }
 
     @Override

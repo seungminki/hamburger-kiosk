@@ -3,6 +3,8 @@ package main.screens;
 import main.Input;
 import main.OrderProduct;
 import main.entities.*;
+import main.enums.ErrorMessage;
+import main.enums.ProductType;
 
 import java.io.IOException;
 
@@ -16,37 +18,31 @@ public class ProductScreen {
     OrderProduct order = new OrderProduct();
 
     public void welcomeScreen() throws IOException {
-
         product.addProduct();
+        showAccount();
+
         while (true) {
-            System.out.println("=================================");
-
-            String userId = UserScreen.connectedAccount();
-            String adminName = AdminScreen.connectedAccount();
-            showAccount(userId, adminName);
-
             showAllProduct();
             buyProduct();
 
             if (!ynRebuyProduct()) {
                 break;
             }
-
         }
-
     }
 
-    private void showAccount(String userId, String adminName) {
-        System.out.println("안녕하세요. " + userId + "님 햄버거 가게 입니다.");
-        System.out.println("현재 접속된 관리자는 " + adminName + "입니다.");
-        System.out.println("\n");
+
+    private void showAccount() {
+        System.out.println("=================================");
+        System.out.println("안녕하세요. " + UserScreen.connectedAccount() + "님 햄버거 가게 입니다.");
+        System.out.println("현재 접속된 관리자는 " + AdminScreen.connectedAccount() + "입니다.\n");
     }
 
     private void showAllProduct() {
-        product.getProductByCategory(ProductCategory.HAMBURGER.getCategory());
-        product.getProductByCategory(ProductCategory.H_SET.getCategory());
-        product.getProductByCategory(ProductCategory.SIDE.getCategory());
-        product.getProductByCategory(ProductCategory.DRINK.getCategory());
+        product.getProductByCategory(ProductType.HAMBURGER.getType());
+        product.getProductByCategory(ProductType.SET.getType());
+        product.getProductByCategory(ProductType.SIDE.getType());
+        product.getProductByCategory(ProductType.DRINK.getType());
 
         System.out.println("=================================");
         System.out.println("\n");
@@ -60,19 +56,16 @@ public class ProductScreen {
     }
 
     private void buyProduct() {
+        String[] items = inputBuyProduct();
         try {
-            String[] items = inputBuyProduct();
-
-            for (String item : items) {
-                order.processOrderItems(item);
-            }
-            resultReceipt(items);
+            order.processOrder(UserScreen.connectedAccount(), items);
+            showReceipt(items);
         } catch (Exception e) {
-            System.out.println("[ERROR] 주문 처리 중 오류가 발생했습니다.\n");
+            System.out.println(ErrorMessage.PROBLEM_ORDER_PRODUCT.getMessage());
         }
     }
 
-    private void resultReceipt(String[] items) {
+    private void showReceipt(String[] items) {
         int totalNum = 0;
         int totalPrice = 0;
 
@@ -99,20 +92,19 @@ public class ProductScreen {
         System.out.println("총구매액 " + totalNum + " " + totalPrice);
         System.out.println("=====================");
 
-        resultAccountAssets(totalPrice);
+        showAccountAssets(totalPrice);
     }
 
-    private void resultAccountAssets(int totalPrice) {
+    private void showAccountAssets(int totalPrice) {
         String adminName = AdminScreen.connectedAccount();
         String userId = UserScreen.connectedAccount();
 
         int totalAdminAssets = admin.updateAdminAssets(adminName, totalPrice);
         int totalUserAssets = user.updateUserAssets(userId, totalPrice);
 
-        // TODO: 회원의 보유 금액이 -가 된다면 에러
-
         System.out.println("판매자: " + adminName + ", " + totalAdminAssets);
         System.out.println("구매자: " + userId + ", " + totalUserAssets);
+        System.out.println("\n");
     }
 
     public boolean ynRebuyProduct() {
@@ -129,9 +121,7 @@ public class ProductScreen {
             return false;
         }
 
-        // TODO: y,n 말고 다른 문자 입력시 에러 처리
-
-        return false;
+        throw new IllegalArgumentException(ErrorMessage.INVALID_REBUY_OPTION.getMessage());
 
 
     }

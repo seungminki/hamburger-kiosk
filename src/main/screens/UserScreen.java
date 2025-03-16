@@ -10,45 +10,42 @@ public class UserScreen implements AccountScreen {
 
     private static String loggedInUser;
 
+    int idNumber = 0;
+    int assetsNumber = 1;
+
     @Override
     public void showCreateScreen() {
         System.out.println("회원의 정보를 입력해주세요 ex) 1, 30000");
-        String info = input.getInput();
-        // TODO: 동일한 아이디의 회원이 있는 경우 "이미 생성된 회원 입니다" 출력
-        create(info);
-        System.out.println(user.getAllUsers());
+        create(input.getInput());
     }
 
     @Override
     public void showLoginScreen() {
         System.out.println("접속할 회원의 번호를 입력해주세요");
-        String userId = input.getInput();
+        login(input.getInput());
+    }
 
-        if (validate(userId)) {
-            login(userId);
-            loggedInUser = userId;
+    @Override
+    public void create(String userInfo) {
+        String[] parts = input.splitAccountInput(userInfo);
+
+        if (validate(parts[idNumber])) {
+            throw new IllegalArgumentException(ErrorMessage.ALREADY_USER.getMessage());
         }
+        user.addUser(parts[idNumber], Integer.parseInt(parts[assetsNumber]));
     }
 
     @Override
-    public void create(String s) {
-        String[] parts = input.splitAccountInput(s);
-
-        String id = parts[0];
-        int assets = Integer.parseInt(parts[1]);
-
-        user.addUser(id, assets);
+    public void login(String userId) {
+        if (!validate(userId)) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_USER.getMessage());
+        }
+        loggedInUser = userId;
     }
 
     @Override
-    public void login(String s) {
-        user.getUser(s);
-    }
-
-    @Override
-    public boolean validate(String s) {
-        if (user.getUser(s) == null) {
-            System.out.println(ErrorMessage.INVALID_USER.getMessage());
+    public boolean validate(String userId) {
+        if (user.getUser(userId) == null) {
             return false;
         }
         return true;

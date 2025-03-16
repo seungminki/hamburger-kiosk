@@ -2,6 +2,7 @@ package main.screens;
 
 import main.Input;
 import main.entities.AdminDao;
+import main.enums.ErrorMessage;
 
 public class AdminScreen implements AccountScreen {
     Input input = new Input();
@@ -47,7 +48,7 @@ public class AdminScreen implements AccountScreen {
     @Override
     public boolean validate(String adminName) {
         if (admin.getAdmin(adminName) == null) {
-            System.out.println("해당 관리자는 존재하지 않습니다.\n");
+            System.out.println(ErrorMessage.INVALID_USER.getMessage());
             return false;
         }
         return true;

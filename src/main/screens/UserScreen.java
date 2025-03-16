@@ -2,6 +2,7 @@ package main.screens;
 
 import main.Input;
 import main.entities.UserDao;
+import main.enums.ErrorMessage;
 
 public class UserScreen implements AccountScreen {
     Input input = new Input();
@@ -47,7 +48,7 @@ public class UserScreen implements AccountScreen {
     @Override
     public boolean validate(String s) {
         if (user.getUser(s) == null) {
-            System.out.println("해당 회원은 존재하지 않습니다.");
+            System.out.println(ErrorMessage.INVALID_USER.getMessage());
             return false;
         }
         return true;

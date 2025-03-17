@@ -54,6 +54,7 @@ public class ProductScreen {
             order.processOrder(UserScreen.connectedAccount(), items);
             showReceipt(items);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println(ErrorMessage.PROBLEM_ORDER_PRODUCT.getMessage());
         }
     }

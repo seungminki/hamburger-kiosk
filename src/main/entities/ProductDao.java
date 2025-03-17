@@ -16,10 +16,8 @@ public class ProductDao {
         List<String> lines = extractMd.readMdFiles();
         List<Product> productList = extractMd.alterDataLines(lines);
 
-        for (Product product : productList) {
-            products.put(product.getName(), new Product(product.getName(), product.getPrice(), product.getQuantity(), product.getDescription(), product.getCategory()));
+        productList.forEach(product -> products.put(product.getName(), new Product(product)));
 
-        }
     }
 
     public List<Product> getAllProducts() {
@@ -50,7 +48,7 @@ public class ProductDao {
     }
 
 
-    public List<Product> getProductByCategory(String category) {
+    public void getProductByCategory(String category) {
 
         List<Product> productList = new ArrayList<>();
 
@@ -65,8 +63,6 @@ public class ProductDao {
             System.out.println(p.getProductInfo());
         }
         System.out.println("\n");
-
-        return productList;
 
 
     }

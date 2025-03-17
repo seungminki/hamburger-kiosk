@@ -15,6 +15,14 @@ public class Product {
         this.category = category;
     }
 
+    public Product(Product product) {
+        this.name = product.name;
+        this.price = product.price;
+        this.quantity = product.quantity;
+        this.description = product.description;
+        this.category = product.category;
+    }
+
     public String getName() {
         return name;
     }

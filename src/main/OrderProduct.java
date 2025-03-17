@@ -1,103 +1,124 @@
 package main;
 
-import main.entities.Product;
 import main.entities.ProductDao;
+import main.entities.UserDao;
+
+import main.enums.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderProduct {
-    Input input = new Input();
     ProductDao product = new ProductDao();
+    UserDao user = new UserDao();
 
-    public void processOrderItems(String item) {
-        // TODO: 매직넘버 처리
-        // TODO: Complexity 해결
-        String[] parts = item.split("-");
-        String name = parts[0]; // 상품명
-        int count = Integer.parseInt(parts[1]); // 구매 개수
+    private static final int NAME = 0;
+    private static final int PRICE = 1;
 
-        Product p = product.getProduct(name); // -한우버거, 10000원, 3개, 롯데리아 한우버거
-
-        if (!validateProductName(p)) {
-            return;
-        }
-
-        if ((isSide(p) || isDrink(p)) && validateProductQuantity(name, count)) {
-            product.updateProductQuantity(name, count);
-        }
-
-        if (isBurger(p) && validateProductQuantity(name, count)) {
-            product.updateProductQuantity(name, count);
-            product.updateProductQuantity(name + "세트", count);
-        }
-
-        if (isBurgerSet(p) && validateProductQuantity(name, count) && validateSetComponentsQuantity(count)) {
-            // TODO: 콜라, 제로콜라 중 선택 기능 추가
-            product.updateProductQuantity(name, count);
-
-            String updatedName = name.replace("세트", "");
-            product.updateProductQuantity(updatedName, count);
-            product.updateProductQuantity("감자튀김", count);
-            product.updateProductQuantity("콜라", count);
-
+    public void processOrder(String userId, String[] items) {
+        for (List<String> item : parseOrderItems(userId, items)) {
+            processSingleItem(item);
         }
     }
 
-    private boolean validateSetComponentsQuantity(int count) {
-        // TODO: 감자튀김, 콜라 Enum으로 분리
-        if (!validateProductQuantity("감자튀김", count) ||
-                !validateProductQuantity("콜라", count)) {
-            System.out.println("[ERROR] 세트 구성품(감자튀김/콜라)의 재고가 부족합니다.");
-            return false;
+    private List<List<String>> parseOrderItems(String userId, String[] items) {
+        List<List<String>> parsedItems = new ArrayList<>();
+        int totalPrice = 0;
+
+        for (String item : items) {
+            String[] parts = item.split(InputSign.PRODUCT_SEPARATOR.getSign());
+            List<String> itemList = new ArrayList<>();
+
+            validateProductName(parts[NAME]);
+
+            itemList.add(parts[NAME]);
+            itemList.add(parts[PRICE]);
+            parsedItems.add(itemList);
+
+            int eachPrice = product.getProduct(parts[NAME]).getPrice() * Integer.parseInt(parts[PRICE]);
+            totalPrice += eachPrice;
         }
-        return true;
+
+        validateUserAssets(userId, totalPrice);
+
+        return parsedItems;
     }
 
-    private boolean validateProductName(Product p) {
-        if (p == null) {
-            System.out.println("[ERROR] 존재하지 않는 상품입니다.");
-            return false;
+    private void validateProductName(String productName) {
+        if (product.getProduct(productName) == null) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_PRODUCT.getMessage());
         }
-        return true;
     }
 
-    private boolean validateProductQuantity(String productName, int buyQuantity) {
-        Product p = product.getProduct(productName);
+    private void validateUserAssets(String userId, int totalPrice) {
+        if (user.getUser(userId).getAssets() < totalPrice) {
+            throw new IllegalArgumentException(ErrorMessage.OVER_USER_ASSETS.getMessage());
+        }
+    }
 
+    private void processSingleItem(List<String> item) {
+        String name = item.get(NAME);
+        int count = Integer.parseInt(item.get(PRICE));
+
+        String pCategory = product.getProduct(name).getCategory();
+
+        if (pCategory.equals(ProductType.SIDE.getType())) {
+            buySide(name, count);
+        }
+
+        if (pCategory.equals(ProductType.DRINK.getType())) {
+            buyDrink(name, count);
+        }
+
+        if (pCategory.equals(ProductType.HAMBURGER.getType())) {
+            buyHamburger(name, count);
+        }
+
+        if (pCategory.equals(ProductType.SET.getType())) {
+            buySet(name, count);
+        }
+    }
+
+    private void validateProductQuantity(String productName, int buyQuantity) {
         try {
-            int currentQuantity = Integer.parseInt(p.getQuantity());
-
-            if (currentQuantity > buyQuantity) {
-                return true;
-            } else {
-                System.out.println("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다.");
-                return false;
+            int currentQuantity = Integer.parseInt(product.getProduct(productName).getQuantity());
+            if (currentQuantity < buyQuantity) {
+                throw new IllegalArgumentException(ErrorMessage.OVER_PRODUCT_QUANTITY.getMessage());
             }
         } catch (NumberFormatException e) {
-            System.out.println("[ERROR] 품절된 상품은 구매할 수 없습니다.");
-            return false;
+            throw new IllegalArgumentException(ErrorMessage.INVALID_PRODUCT.getMessage());
         }
     }
 
-    private boolean validateProductAssets(int userAssets, int totalPrice) {
-        // TODO: 회원의 보유 금액과 총 물품 가격을 비교하여 에러 발생
-        if (userAssets > totalPrice) {
-            return true;
+    private void buySide(String pName, int quantity) {
+        validateProductQuantity(pName, quantity);
+        product.updateProductQuantity(pName, quantity);
+    }
+
+    private void buyDrink(String pName, int quantity) {
+        validateProductQuantity(pName, quantity);
+        product.updateProductQuantity(pName, quantity);
+    }
+
+    private void buyHamburger(String pName, int quantity) {
+        validateProductQuantity(pName, quantity);
+
+        product.updateProductQuantity(pName, quantity);
+        product.updateProductQuantity(pName + ProductType.SET.getType(), quantity);
+
+    }
+
+    private void buySet(String pName, int quantity) {
+        validateProductQuantity(pName, quantity);
+
+        try {
+            buySide(ProductType.FRENCH_FRIES.getType(), quantity);
+            buyDrink(ProductType.COKE.getType(), quantity);
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException(ErrorMessage.OVER_HAMBURGER_SET_QUANTITY.getMessage());
         }
-        return false;
-    }
 
-    private boolean isBurger(Product p) {
-        return p.getCategory().equals("햄버거");
-    }
-
-    private boolean isBurgerSet(Product p) {
-        return p.getCategory().equals("세트");
-    }
-
-    private boolean isSide(Product p) {
-        return p.getCategory().equals("사이드");
-    }
-
-    private boolean isDrink(Product p) {
-        return p.getCategory().equals("음료수");
+        buyHamburger(pName.replace(ProductType.SET.getType(), ""), quantity);
     }
 }

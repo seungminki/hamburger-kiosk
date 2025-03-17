@@ -86,7 +86,7 @@ public class OrderProduct {
                 throw new IllegalArgumentException(ErrorMessage.OVER_PRODUCT_QUANTITY.getMessage());
             }
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_PRODUCT.getMessage());
+            throw new IllegalArgumentException(ErrorMessage.SOLD_OUT_PRODUCT.getMessage());
         }
     }
 

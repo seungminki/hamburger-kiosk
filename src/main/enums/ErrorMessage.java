@@ -4,7 +4,7 @@ public enum ErrorMessage {
     INVALID_PRODUCT("[ERROR] 존재하지 않는 상품입니다."),
     OVER_PRODUCT_QUANTITY("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다."),
     SOLD_OUT_PRODUCT("[ERROR] 품절된 상품은 구매할 수 없습니다."),
-    OVER_HAMBURGER_SET_QUANTITY("[ERROR] 세트 구성품(감자취김/콜라)의 재고 수량이 부족합니다."),
+    OVER_HAMBURGER_SET_QUANTITY("[ERROR] 세트 구성품(감자튀김/콜라)의 재고 수량이 부족합니다."),
     INVALID_USER("[ERROR] 존재하지 않는 회원입니다."),
     INVALID_ADMIN("[ERROR] 존재하지 않는 관리자입니다."),
     ALREADY_USER("[ERROR] 이미 존재하는 회원 번호입니다."),

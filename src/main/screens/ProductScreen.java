@@ -3,8 +3,7 @@ package main.screens;
 import main.Input;
 import main.OrderProduct;
 import main.entities.*;
-import main.enums.ErrorMessage;
-import main.enums.ProductType;
+import main.enums.*;
 
 import java.io.IOException;
 
@@ -73,7 +72,7 @@ public class ProductScreen {
         System.out.println("상품명 수량 금액");
 
         for (String item : items) {
-            String[] parts = item.split("-");
+            String[] parts = item.split(InputSign.PRODUCT_SEPARATOR.getSign());
 
             String name = parts[0];
             int count = Integer.parseInt(parts[1]);

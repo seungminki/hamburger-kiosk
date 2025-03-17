@@ -1,14 +1,11 @@
 package main;
 
+import main.enums.InputSign;
+
 import java.util.Scanner;
 
 public class Input {
     Scanner sc = new Scanner(System.in);
-
-    private static final String ACCOUNT_INPUT_DELIMITER = " ";
-    private static final String PRODUCT_INPUT_REGEX = "[\\[\\]]";
-    private static final String EMPTY_STRING = "";
-    private static final String INPUT_DELIMITER = ",";
 
     public int getMenuInput() {
         return sc.nextInt();
@@ -19,11 +16,11 @@ public class Input {
     }
 
     public String[] splitAccountInput(String input) {
-        return input.replace(ACCOUNT_INPUT_DELIMITER, EMPTY_STRING).split(INPUT_DELIMITER);
+        return input.replace(InputSign.ACCOUNT_SEPARATOR.getSign(), InputSign.EMPTY.getSign()).split(InputSign.DELIMITER.getSign());
     }
 
     public String[] splitProductInput(String input) {
-        return input.replaceAll(PRODUCT_INPUT_REGEX, EMPTY_STRING).split(INPUT_DELIMITER);
+        return input.replaceAll(InputSign.PRODUCT_REGEX.getSign(), InputSign.EMPTY.getSign()).split(InputSign.DELIMITER.getSign());
     }
 
 }

@@ -12,6 +12,4 @@ public interface AccountScreen {
     boolean validate(String accountName);
 
     boolean isLoggedIn();
-
-    // TODO: logout(); 기능 추가
 }

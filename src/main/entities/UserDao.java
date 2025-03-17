@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserDao {
-    private Map<String, User> users = DatabaseClass.getUser();
+    private static final Map<String, User> users = DatabaseClass.getUser();
 
     public void addUser(String userId, int assets) {
         users.put(userId, new User(userId, assets));

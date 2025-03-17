@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductDao {
-    private Map<String, Product> products = DatabaseClass.getProduct();
+    private static final Map<String, Product> products = DatabaseClass.getProduct();
 
-    public void addProduct() throws IOException {
+    public static void addProduct() throws IOException {
         ExtractMd extractMd = new ExtractMd();
 
         List<String> lines = extractMd.readMdFiles();
@@ -52,7 +52,7 @@ public class ProductDao {
 
         List<Product> productList = new ArrayList<>();
 
-        for (Product p : this.products.values()) {
+        for (Product p : products.values()) {
             if (p.getCategory().equals(category)) {
                 productList.add(p);
             }

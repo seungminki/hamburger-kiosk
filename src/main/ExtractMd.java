@@ -1,6 +1,7 @@
 package main;
 
 import main.entities.Product;
+import main.enums.InputSign;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,26 +10,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExtractMd {
-    String productMdPath = "src/main/resources/products.md";
+    private static final String PRODUCT_MD_PATH = "src/main/resources/products.md";
+
+    private static final int NAME = 0;
+    private static final int PRICE = 1;
+    private static final int QUANTITY = 2;
+    private static final int DESCRIPTION = 3;
+    private static final int CATEGORY = 4;
 
     public List<String> readMdFiles() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(productMdPath));
-
-        return lines;
+        return Files.readAllLines(Paths.get(PRODUCT_MD_PATH));
     }
 
     public List<Product> alterDataLines(List<String> lines) {
+        int headerLines = 1;
+
         List<Product> productList = new ArrayList<>();
 
-        for (int i = 1; i < lines.size(); i++) {
-            String[] values = lines.get(i).split(",");
+        lines.stream().skip(headerLines).forEach(line -> {
+            String[] parts = line.split(InputSign.DELIMITER.getSign());
 
-            productList.add(new Product(values[0], Integer.parseInt(values[1]), values[2],
-                    values[3].replaceAll("\"", ""), values[4]));
-        }
+            productList.add(new Product(
+                            parts[NAME],
+                            Integer.parseInt(parts[PRICE]),
+                            parts[QUANTITY],
+                            parts[DESCRIPTION].replace(InputSign.QUOTATION.getSign(), InputSign.EMPTY.getSign()),
+                            parts[CATEGORY]
+                    )
+            );
+        });
 
         return productList;
 
     }
-
 }

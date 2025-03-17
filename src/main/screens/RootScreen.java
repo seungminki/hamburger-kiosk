@@ -3,8 +3,6 @@ package main.screens;
 import main.Input;
 import main.enums.ErrorMessage;
 
-import java.io.IOException;
-
 public class RootScreen {
     Input input = new Input();
 
@@ -29,7 +27,7 @@ public class RootScreen {
         return input.getMenuInput();
     }
 
-    public void moveScreen(int inputValue) throws IOException {
+    public void moveScreen(int inputValue) {
 
         if (inputValue == CREATE_ADMIN) {
             as.showCreateScreen();

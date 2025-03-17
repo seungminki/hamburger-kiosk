@@ -5,8 +5,6 @@ import main.OrderProduct;
 import main.entities.*;
 import main.enums.*;
 
-import java.io.IOException;
-
 public class ProductScreen {
     Input input = new Input();
 
@@ -16,18 +14,14 @@ public class ProductScreen {
 
     OrderProduct order = new OrderProduct();
 
-    public void welcomeScreen() throws IOException {
-        product.addProduct();
+    public void welcomeScreen() {
         showAccount();
 
-        while (true) {
+        do {
             showAllProduct();
             buyProduct();
 
-            if (!ynRebuyProduct()) {
-                break;
-            }
-        }
+        } while (ynRebuyProduct());
     }
 
 

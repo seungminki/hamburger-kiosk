@@ -119,6 +119,6 @@ public class OrderProduct {
             throw new IllegalArgumentException(ErrorMessage.OVER_HAMBURGER_SET_QUANTITY.getMessage());
         }
 
-        buyHamburger(pName.replace(ProductType.SET.getType(), ""), quantity);
+        buyHamburger(pName.replace(ProductType.SET.getType(), InputSign.EMPTY.getSign()), quantity);
     }
 }

@@ -11,10 +11,6 @@ public class AdminDao {
         admins.put(adminName, new Admin(adminName, assets));
     }
 
-    public List<Admin> getAllAdmins() {
-        return new ArrayList<>(admins.values());
-    }
-
     public Admin getAdmin(String adminName) {
         return admins.get(adminName);
     }

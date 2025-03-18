@@ -20,11 +20,6 @@ public class ProductDao {
 
     }
 
-    public List<Product> getAllProducts() {
-        return new ArrayList<>(products.values());
-
-    }
-
     public Product getProduct(String productName) {
         return products.get(productName);
     }
